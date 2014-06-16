@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# *** Functions ***
+
+function die {
+    printf "fatal: %s\n\n" "$1"
+    exit "$2"
+} # die
+
+
+function assertArgumentList {
+    [[ -z "$1" ]] && die "provide a valid, registered container name" "1"
+} # assertArgumentList
+
+
+function assertUserNeedsHelp {
+    [[ "$1" == "help" ]] && die "dzap - stop a container and remove it from the local registry" "0"
+} # assertUserNeedsHelp
+
+
+function assertContainerIsRunning {
+   local container="$1" 
+
+   docker ps | awk -v "container=$container" 'BEGIN { status = 2; } $NF == container && NR > 1 { status = 0; exit(status); } END { exit(status); }'
+
+   [[ "$?" != "0" ]] && die "Container: \"$container\" is not running, even if it's registered; manual removal required" "2"
+} # assertContainerIsRunning
+
+
+# *** main ***
+
+
+container="$1"
+
+assertArgumentList "$1"
+
+assertUserNeedsHelp "$1"
+
+assertContainerIsRunning "$container"
+
+docker stop "$container" > /dev/null
+docker rm "$container" > /dev/null
+
+dockerStatus="$?"
+
+if [[ "$?" == 0 ]]
+then
+    echo "Container: \"$container\" stopped and removed from local registry."
+    exit 0
+else
+    die "Container: \"$container\" removal failed -- docker rm return code = $dockerStatus" "3"
+fi
+
