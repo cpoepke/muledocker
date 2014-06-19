@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# include:
+
+. zapcommon
+
+
+# *** Functions ***
+
+function assertArgumentList {
+    if [[ -z "$1" ]]
+    then
+        docker images
+        die "provide a valid, existing image name" "1"
+    fi
+} # assertArgumentList
+
+
+function assertImageExists {
+    local image="$1"
+
+    docker images | awk -v "image=$image" 'BEGIN { status = 2; } $3 == image || $1 == image { status = 0; exit(0); } END { exit(status); }'
+
+    if [[ "$?" != "0" ]]
+    then
+        docker images
+        die "Image: \"$image\" doesn't exist" "2"
+    fi
+} # assertImageExists
+
+
+# *** main ***
+
+echo "Zap a local image out of existence"
+
+image="$1"
+
+assertArgumentList "$image"
+assertImageExists "$image"
+
+docker rmi "$image"
+
+dockerStatus="$?"
+
+if [[ "$docerStatus" == 0 ]]
+then
+    echo "Image: \"$image\" removed from the local repository"
+    exit 0
+else
+    die "Image:  \"$image\" removal failed -- docker rmi return code = $dockerStatus" "3"
+fi
+

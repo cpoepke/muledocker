@@ -1,12 +1,11 @@
 #!/bin/bash
 
+# include:
+
+source zapcommon
+
+
 # *** Functions ***
-
-function die {
-    printf "fatal: %s\n\n" "$1"
-    exit "$2"
-} # die
-
 
 function assertArgumentList {
     [[ -z "$1" ]] && die "provide a valid, registered container name" "1"
@@ -21,7 +20,7 @@ function assertUserNeedsHelp {
 function assertContainerIsRunning {
     local container="$1" 
 
-    docker ps | awk -v "container=$container" 'BEGIN { status = 2; } $NF == container && NR > 1 { status = 0; exit(status); } END { exit(status); }'
+    docker ps | awk -v "container=$container" 'BEGIN { status = 2; } $NF == container && NR > 1 { status = 0; exit(0); } END { exit(status); }'
 
     if [[ "$?" != "0" ]]
     then
@@ -34,6 +33,8 @@ function assertContainerIsRunning {
 # *** main ***
 
 
+echo "Zap a container out of existence"
+
 container="$1"
 
 assertArgumentList "$1"
@@ -45,9 +46,9 @@ docker rm "$container" > /dev/null
 
 dockerStatus="$?"
 
-if [[ "$?" == 0 ]]
+if [[ "$docerStatus" == 0 ]]
 then
-    echo "Container: \"$container\" stopped and removed from local registry."
+    echo "Container: \"$container\" stopped and removed from the local registry"
     exit 0
 else
     die "Container: \"$container\" removal failed -- docker rm return code = $dockerStatus" "3"
