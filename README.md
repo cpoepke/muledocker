@@ -1,4 +1,8 @@
-[TOC]
+# Mule Docker Image
+
+This project defines the Dockerfile and supporting tools for packaging and deploying
+a complete, operational version of Mule using Docker.
+
 
 ## Build the Image
 
