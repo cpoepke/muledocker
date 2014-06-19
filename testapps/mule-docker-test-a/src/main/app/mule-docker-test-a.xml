@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="CE-3.5.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd">
+    <flow name="MuleDockerJavaTestA" doc:name="MuleDockerJavaTestA" doc:description="Mule Docker Java Test A
+
+This work flow and setup are used for validating that external HTTP requests sent to Java class components are working as expected." initialState="started" processingStrategy="synchronous">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" path="test_a" encoding="UTF-8" contentType="application/json" doc:name="MuleDockerJavaTestAEndpoint"/>
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" path="test_b" encoding="UTF-8" contentType="application/json" doc:name="MuleDockerJavaTestAEndpoint"/>
+        <component class="net.cime.mule.docker.TestA" doc:name="DockerTestA"/>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+</mule>

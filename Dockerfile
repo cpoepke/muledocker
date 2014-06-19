@@ -5,16 +5,31 @@
 FROM                    dockerfile/java:latest
 MAINTAINER              Eugene Ciurana <muledocker@eugeneciurana.com>
 
+
 # Mule installation:
+
 RUN                     echo "Fetching Mule - this may take a few minutes"
 ADD                     https://repository.mulesoft.org/nexus/content/repositories/releases/org/mule/distributions/mule-standalone/3.5.0/mule-standalone-3.5.0.tar.gz /opt/
-RUN                     tar -C /opt -xzvf /opt/mule-standalone-3.5.0.tar.gz
-RUN                     ln -s /opt/mule-standalone-3.5.0 /opt/mule
-RUN                     rm -f /opt/mule-standalone-3.5.0.tar.gz
+WORKDIR                 /opt
+RUN                     tar -xzvf /opt/mule-standalone-3.5.0.tar.gz
+RUN                     ln -s mule-standalone-3.5.0 mule
+# Remove things that we don't need in production:
+RUN                     rm -f mule-standalone-3.5.0.tar.gz
+RUN                     rm -Rf mule/apps/default*
+RUN                     rm -Rf mule/examples
 
 
-# TODO:  Jython installation:
+# Jython installation:
+# NOTE:  Using Jython 2.7 beta 2; it's good enough for all our purposes.  The beta files come down with a weird
+#        name due to a redirect via maven.org - no worries, this can be fixed later.
+# 
+RUN                     wget http://search.maven.org/remotecontent?filepath=org/python/jython-standalone/2.7-b2/jython-standalone-2.7-b2.jar
+RUN                     mv $(ls | awk '/remote/') /opt/mule-standalone-3.5.0/lib/opt/jython-standalone-2.7-b2.jar
 
+
+# TODO:  If anyone cares, they may add the Groovy and JavaScript run-times;
+#        they're also out of date.  See:
+#        http://eugeneciurana.com/site.php?page=musings&contentTag=Anypoint-Jython.html
 
 
 # Configure external access:
@@ -31,7 +46,8 @@ EXPOSE  8081
 
 # Environment and execution:
 
-ENV             MULE_BASE=/opt/mule
+ENV             MULE_BASE /opt/mule
+WORKDIR         /opt/mule-standalone-3.5.0
 
 CMD             /opt/mule/bin/mule
 
