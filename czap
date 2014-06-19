@@ -46,7 +46,7 @@ docker rm "$container" > /dev/null
 
 dockerStatus="$?"
 
-if [[ "$docerStatus" == 0 ]]
+if [[ "$dockerStatus" == "0" ]]
 then
     echo "Container: \"$container\" stopped and removed from the local registry"
     exit 0

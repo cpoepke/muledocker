@@ -35,10 +35,10 @@ RUN                     mv $(ls | awk '/remote/') /opt/mule-standalone-3.5.0/lib
 # Configure external access:
 
 # Mule remote debugger
-EXPOSE  5000
+# EXPOSE  5000
 
 # Mule JMX port (must match Mule config file)
-EXPOSE  1098
+# EXPOSE  1098
 
 # Default port for HTTP endpoints in AnypointStudio
 EXPOSE  8081    
