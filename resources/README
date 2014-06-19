@@ -1,0 +1,5 @@
+This directory contains resources that could be used for a variety
+of things not related to the container itself.  The documentation
+images, for example, are served from AWS and the master files are
+stored here.
+

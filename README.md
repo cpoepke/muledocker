@@ -18,6 +18,18 @@ TBD
 This configuration includes two test examples to validate that the Mule installation
 is ready for deployment.
 
+
+### Java Work Flow
+
+<img src='https://s3.amazonaws.com/0921ccnz33vh1pvcmg02.images/cdn/MuleDockerJavaTestA.png' />
+
+
+### Python Work Flow
+
+<img src='https://s3.amazonaws.com/0921ccnz33vh1pvcmg02.images/cdn/MuleDockerPythonTestB.png' />
+
+
+
 ### Build the Test Mule Apps
 
 Run these commands:
