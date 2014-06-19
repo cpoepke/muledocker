@@ -42,7 +42,7 @@ docker rmi "$image"
 
 dockerStatus="$?"
 
-if [[ "$docerStatus" == 0 ]]
+if [[ "$dockerStatus" == 0 ]]
 then
     echo "Image: \"$image\" removed from the local repository"
     exit 0
