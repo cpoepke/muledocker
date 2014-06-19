@@ -52,6 +52,19 @@ Validate that both Maven builds completed well by running:
 find testapps/ -name mule-docker*zip
 ```
 
+
+#### Build the Test Mule Apps in AnypointStudio
+
+1. Open AnypointStudio
+2. Close all open projects
+3. Right click on the package manager and select Import...
+4. Select Mule
+5. Select Import from Mule Maven Project
+6. Respond to the prompts according to your system setup
+7. Click Finish
+8. Done!
+
+
 The section on writing and deploying the code describes in detail how to start the
 Mule container and how the applications are deployed to it.
 

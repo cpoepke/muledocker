@@ -8,11 +8,11 @@ MAINTAINER              Eugene Ciurana <muledocker@eugeneciurana.com>
 
 # Mule installation:
 
-RUN                     echo "Fetching Mule - this may take a few minutes"
 ADD                     https://repository.mulesoft.org/nexus/content/repositories/releases/org/mule/distributions/mule-standalone/3.5.0/mule-standalone-3.5.0.tar.gz /opt/
 WORKDIR                 /opt
 RUN                     tar -xzvf /opt/mule-standalone-3.5.0.tar.gz
 RUN                     ln -s mule-standalone-3.5.0 mule
+ADD                     testapps/mule-docker-test-a/target/mule-docker-test-a-1.0.0-SNAPSHOT.zip /opt/mule-standalone-3.5.0/apps/
 # Remove things that we don't need in production:
 RUN                     rm -f mule-standalone-3.5.0.tar.gz
 RUN                     rm -Rf mule/apps/default*
@@ -42,6 +42,9 @@ EXPOSE  1098
 
 # Default port for HTTP endpoints in AnypointStudio
 EXPOSE  8081    
+
+# Alternate CIME HTTP default endpoint 
+# EXPOSE  8090
 
 
 # Environment and execution:
