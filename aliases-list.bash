@@ -1,0 +1,5 @@
+alias cls='docker ps -a'
+alias crm='docker rm'
+alias ctail='docker logs -f'
+alias ils='docker images -a'
+alias irm='docker rmi'

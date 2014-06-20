@@ -7,14 +7,29 @@ a complete, operational version of Mule using Docker.
 ## Build the Image
 
 ```bash
-$DOCKER_HUB_USER_NAME="pr3d4t0r"
+DOCKER_HUB_USER_NAME="pr3d4t0r"
 
 docker build -t "$DOCKER_HUB_USER_NAME" .
 ```
 
 ## Publish the Image to Docker Hub
 
-TBD
+```bash
+DOCKER_HUB_MULE_TAB="3.5"
+docker push "$DOCKER_HUB_USER_NAME"/mule:"$DOCKER_HUB_MULE_TAB"
+```
+
+
+## Launching the MuleCE 3.5 Container
+
+```bash
+mkdir -p container_apps
+
+APPS_VOL="/opt/mule-standalone-3.5.0/apps/"
+LOCAL_APPS_VOL="container_apps"
+
+docker run -d --name="mule" -v "$APPS_VOL":"$LOCAL_APPS_VOL" "$DOCKER_HUB_USER_NAME"/mule:"$DOCKER_HUB_MULE_TAB"
+```
 
 
 ## Java and Python Mule Examples
