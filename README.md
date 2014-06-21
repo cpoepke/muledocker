@@ -4,31 +4,124 @@ This project defines the Dockerfile and supporting tools for packaging and deplo
 a complete, operational version of Mule using Docker.
 
 
-## Build the Image
+## Launching the MuleCE 3.5 Container
+
+A Mule CE container can be shipped with a bundled Mule application or users may hot deploy applications
+just like when Mule runs in the native system.
+
+
+### Deploying a Mule Application Container
+
+The Dockerfile only has two relevant lines!  FROM and ADD; everything else comes from pr3d4t0r/mule:
 
 ```bash
-DOCKER_HUB_USER_NAME="pr3d4t0r"
-
-docker build -t "$DOCKER_HUB_USER_NAME" .
+FROM                    pr3d4t0r/mule:latest
+.
+.
+ADD                     mule-docker-test-a/target/mule-docker-test-a-1.0.0-SNAPSHOT.zip /opt/mule-standalone-3.5.0/apps/
 ```
+
+Build the new image:
+
+```bash
+docker build -t "$DOCKER_HUB_USER_NAME"/embeddedmuleapp .
+```
+
+Run the app:
+
+```bash
+docker run -p 8081:8081 -t -i --name='embeddedmuleapp' "$DOCKER_HUB_USER_NAME"/embeddedmuleapp
+```
+
+Notice that the port 8081 was defined in the outer container, under pr3d4t0r/mule -- there's no need to
+define it here again.  If the app opens other ports, EXPOSE them in this app's Dockerfile.
+
+Last, test:
+
+```bash
+curl http://192.168.59.103:8081/test_a
+```
+
+That's the container's IP address, which may be obtained via `docker ip`.  If all went well, the app
+will output:
+
+```javascript
+{"application":"Mule Docker - Test A","language":"Java","version":"1.7.0_55"}
+```
+
+Done!
+
+
+### Hot Deployment of a Mule Application 
+
+Mule supports hot application deployment.  This is done by dropping the application bundle to the 
+`$MULE_BASE/apps` directory, from where the server will automagically load and execute the app.
+
+To do that, the Mule container must map its internal apps directory to a host's designated
+directory.  This project includes a sample directory, `muleapps`, that will be linked to the
+container for hot deployment.
+
+Ensure that the `muleapps` directory exists:
+
+```bash
+mkdir -p muleapps
+```
+
+Launch the pr3d4t0r/mule container.  Ensure that the `muleapps` directory is mounted as a volume in the `$MULE_BASE/apps`
+path on the server!  Also, -v requires an absolute path of it won't find it.
+
+```bash
+docker run -p 8090:8090 -t -i  --name='mule' -v "$HOME/muleapps":/opt/mule-standalone-3.5.0/apps/ pr3d4t0r/mule
+```
+
+Once Mule is running, copy the Mule app (Python test app B in our example) from wherever it is in the file system to
+the `$HOME/muleapps` directory:
+
+```bash
+sleep 3; cp testapps/mule-docker-test-b/target/mule-docker-test-b-1.0.0-SNAPSHOT.zip muleapps/
+```
+
+Last, test the endpoint:
+
+```bash
+curl http://192.168.59.103:8090/test_b
+```
+
+That's the container's IP address, which may be obtained via `docker ip`.  If all went well, the app
+will output:
+
+```javascript
+{"version":"2.7","application":"Mule Docker - Test B","language":"Python"}
+```
+
+Notice that test apps A and B may be running in the Mule server at the same time.  Apps are loaded in
+independent contexts and each app's connectors will bind to specific ports; two individual apps can't
+bind to the same port, that's why test A is open on port 8081, test B is open on port 8090.
+
+<pre>
+*******************************************************************************************************
+*            - - + APPLICATION + - -            *       - - + DOMAIN + - -       * - - + STATUS + - - *
+*******************************************************************************************************
+* mule-docker-test-a-1.0.0-SNAPSHOT             * default                        * DEPLOYED           *
+* mule-docker-test-b-1.0.0-SNAPSHOT             * default                        * DEPLOYED           *
+*******************************************************************************************************
+</pre>
+
+Done!
+
+===
+
+This section contains miscellaneous information and it's under construction:
+
+
+## TODO:  Document the shared volume mount under OS X and the `mountb2dfs` tool
+
 
 ## Publish the Image to Docker Hub
 
 ```bash
 DOCKER_HUB_MULE_TAB="3.5"
 docker push "$DOCKER_HUB_USER_NAME"/mule:"$DOCKER_HUB_MULE_TAB"
-```
-
-
-## Launching the MuleCE 3.5 Container
-
-```bash
-mkdir -p container_apps
-
-APPS_VOL="/opt/mule-standalone-3.5.0/apps/"
-LOCAL_APPS_VOL="container_apps"
-
-docker run -d --name="mule" -v "$APPS_VOL":"$LOCAL_APPS_VOL" "$DOCKER_HUB_USER_NAME"/mule:"$DOCKER_HUB_MULE_TAB"
 ```
 
 

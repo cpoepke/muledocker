@@ -12,7 +12,6 @@ ADD                     https://repository.mulesoft.org/nexus/content/repositori
 WORKDIR                 /opt
 RUN                     tar -xzvf /opt/mule-standalone-3.5.0.tar.gz
 RUN                     ln -s mule-standalone-3.5.0 mule
-ADD                     testapps/mule-docker-test-a/target/mule-docker-test-a-1.0.0-SNAPSHOT.zip /opt/mule-standalone-3.5.0/apps/
 # Remove things that we don't need in production:
 RUN                     rm -f mule-standalone-3.5.0.tar.gz
 RUN                     rm -Rf mule/apps/default*
@@ -35,16 +34,16 @@ RUN                     mv $(ls | awk '/remote/') /opt/mule-standalone-3.5.0/lib
 # Configure external access:
 
 # Mule remote debugger
-# EXPOSE  5000
+EXPOSE  5000
 
 # Mule JMX port (must match Mule config file)
-# EXPOSE  1098
+EXPOSE  1098
 
 # Default port for HTTP endpoints in AnypointStudio
 EXPOSE  8081    
 
-# Alternate CIME HTTP default endpoint 
-# EXPOSE  8090
+# Alternate pr3d4t0r HTTP default endpoint
+EXPOSE  8090
 
 
 # Environment and execution:

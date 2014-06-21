@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
 http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd">
     <flow name="MuleDockerPythonTestB" doc:name="MuleDockerPythonTestB" initialState="started" processingStrategy="synchronous">
-        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8090" path="test_b" encoding="UTF-8" contentType="application/json" doc:name="MuleDockerPythonTestBEndpoint"/>
+        <http:inbound-endpoint exchange-pattern="request-response" host="0.0.0.0" port="8090" path="test_b" encoding="UTF-8" contentType="application/json" doc:name="MuleDockerPythonTestBEndpoint"/>
         <scripting:component doc:name="PythonTestB">
             <scripting:script engine="jython"><![CDATA[#
 # *** PythonTestB ***
