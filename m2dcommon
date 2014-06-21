@@ -1,0 +1,19 @@
+#!/bin/bash
+
+
+# *** Symbolic constants ***
+
+B2D_USER="docker"
+B2D_ID_RSA="$HOME/.ssh/id_boot2docker"
+B2D_MULE_APPS_HOME="/home/$B2D_USER/mule/apps"
+HOST_MULE_APPS="muleapps"
+
+
+# *** Mule to Docker common functions and constants ***
+
+function die {
+    printf "fatal: %s\n\n" "$1"
+    exit "$2"
+} # die
+
+

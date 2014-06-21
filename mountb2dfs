@@ -1,0 +1,25 @@
+#!/bin/bash
+
+
+. m2dcommon
+
+
+# *** main ***
+
+echo "Mounting boot2docker file system; mapped to $MULE_BASE/apps after starting the container"
+b2dGuest=$(boot2docker ip 2>&1| awk '/interface/ { print($NF); }')
+
+
+# *** Assert environment ***
+
+[[ $(uname) != "Darwin" ]] && die "This script is useful only under OS X; Linux systems don't need boot2docker" "1"
+
+[[ -z "$b2dGuest" ]] && die "VM container IP address not found - is boot2docker running?" "2"
+
+[[ -e "$B2D_ID_RSA" ]] || die "$B2D_ID_RSA identity file doesn't exist; did you execute `boot2docker init` yet?" "3"
+
+
+# *** Mount the file system ***
+ssh -i "$B2D_ID_RSA" -l "$B2D_USER" "$b2dGuest" mkdir -p mule/apps
+sshfs "$B2D_USER@$b2dGuest":"$B2D_MULE_APPS_HOME" "$HOST_MULE_APPS" -C -o reconnect -o sshfs_sync -o IdentityFile="$B2D_ID_RSA"
+mount | grep -i "$HOST_MULE_APPS"
