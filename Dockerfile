@@ -1,8 +1,9 @@
 # Dockerizing Mule CE
-# Version:  3.5
+# Version:  3.6
+# This is a fork with an updated Mule Version
 # Based on:  dockerfile/java (Trusted Java from http://java.com)
 
-FROM                    dockerfile/java:latest
+FROM                    java:7
 MAINTAINER              Eugene Ciurana <muledocker@eugeneciurana.com>
 
 
