@@ -4,7 +4,7 @@ This project defines the Dockerfile and supporting tools for packaging and deplo
 a complete, operational version of Mule using Docker.
 
 
-## Launching the MuleCE 3.5 Container
+## Launching the MuleCE 3.6 Container
 
 A Mule CE container can be shipped with a bundled Mule application or users may hot deploy applications
 just like when Mule runs in the native system.
@@ -18,7 +18,7 @@ The Dockerfile only has two relevant lines!  FROM and ADD; everything else comes
 FROM                    pr3d4t0r/mule:latest
 .
 .
-ADD                     mule-docker-test-a/target/mule-docker-test-a-1.0.0-SNAPSHOT.zip /opt/mule-standalone-3.5.0/apps/
+ADD                     mule-docker-test-a/target/mule-docker-test-a-1.0.0-SNAPSHOT.zip /opt/mule-standalone-3.6.1/apps/
 ```
 
 Build the new image:
@@ -71,7 +71,7 @@ Launch the pr3d4t0r/mule container.  Ensure that the `muleapps` directory is mou
 path on the server!  Also, -v requires an absolute path of it won't find it.
 
 ```bash
-docker run -p 8090:8090 -t -i  --name='mule' -v "$HOME/muleapps":/opt/mule-standalone-3.5.0/apps/ pr3d4t0r/mule
+docker run -p 8090:8090 -t -i  --name='mule' -v "$HOME/muleapps":/opt/mule-standalone-3.6.1/apps/ pr3d4t0r/mule
 ```
 
 Once Mule is running, copy the Mule app (Python test app B in our example) from wherever it is in the file system to
@@ -120,7 +120,7 @@ This section contains miscellaneous information and it's under construction:
 ## Publish the Image to Docker Hub
 
 ```bash
-DOCKER_HUB_MULE_TAB="3.5"
+DOCKER_HUB_MULE_TAB="3.6"
 docker push "$DOCKER_HUB_USER_NAME"/mule:"$DOCKER_HUB_MULE_TAB"
 ```
 
